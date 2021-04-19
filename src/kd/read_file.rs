@@ -28,15 +28,23 @@ pub struct Point {
     lat: f64,
 }
 
+fn find_str_at_position(s: &Vec<&str>, p: i32) -> Option<String> {
+    if p < 0 {
+        None
+    } else {
+        Some(s[p as usize].to_owned())
+    }
+}
+
 impl Point {
     fn new(line: &str, ord: u32, config: &PointPositionConfig) -> Option<Self> {
         let lng = config.lng as usize;
         let s: Vec<&str> = line.split(',').collect();
 
         if let (Ok(lng), Ok(lat)) = (s[lng].parse::<f64>(), s[lng + 1].parse::<f64>()) {
-            let name = if config.name != -1 { Some(s[config.name as usize].to_owned()) } else { None };
-            let point_type = if config.point_type != -1 { Some(s[config.point_type as usize].to_owned()) } else { None };
-            let id = if config.id != -1 { Some(s[config.id as usize].to_owned()) } else { None };
+            let name = find_str_at_position(&s, config.name);
+            let point_type = find_str_at_position(&s, config.point_type);
+            let id = find_str_at_position(&s, config.id);
 
             Some(Point {
                 name,
