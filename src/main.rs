@@ -1,14 +1,19 @@
 use std::io::Result;
 
 mod kd;
-use kd::{ Tree, build_kd_tree };
-use kd::read_file::{ read_file_point_list, PointPositionConfig };
+use kd::read_file::{ read_file_point_list, PointPositionConfig, Point };
 
 fn main() -> Result<()> {
-    // let cell_list = read_file_point_list("cell.txt", &PointPositionConfig::new(0, -1, -1, 11));
-
-    if let Ok(mut poi_list) = read_file_point_list("poi.txt", &PointPositionConfig::new(0, -1, -1, 3)) {
-        let kd_tree = build_kd_tree(&mut poi_list);
+    if let Ok(mut poi_list) = read_file_point_list("data/poi.txt", &PointPositionConfig::new(0, -1, -1, 5)) {
+        if let Some(tree) = kd::build_kd_tree(&mut poi_list) {
+            for item in tree.search_tree(&Point::default(), 5) {
+                println!("result: {:?}", item);
+            }
+        } else {
+            println!("build kd tree failed!");
+        }
+    } else {
+        println!("No poi information!");
     }
 
     Ok(())
